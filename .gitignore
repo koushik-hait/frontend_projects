@@ -41,6 +41,7 @@ build/Release
 node_modules/
 jspm_packages/
 
+
 # TypeScript v1 declaration files
 typings/
 
@@ -102,3 +103,9 @@ dist
 
 # TernJS port file
 .tern-port
+
+# project files
+blog-app/node_modules/
+test-client/node_modules/
+blog-app/.env
+test-client/.env
