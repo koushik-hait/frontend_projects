@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -19,7 +18,6 @@ import { useNavigate } from "react-router-dom";
 const SignupForm = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  //   const [previewUrl, setPreviewUrl] = useState<string>("");
   const form = useForm<registerType>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -27,11 +25,8 @@ const SignupForm = () => {
       email: "",
       password: "",
       role: "USER",
-      //   avater: undefined,
     },
   });
-
-  //   const imageRef = form.register("avater");
 
   const onSubmit = async (values: registerType) => {
     const res = await registerUser(values);
@@ -57,39 +52,6 @@ const SignupForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {/* <FormField
-          control={form.control}
-          name="avater"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                <Avatar>
-                  <AvatarImage
-                    className="w-24 h-24 rounded-full"
-                    src={
-                      previewUrl ? previewUrl : "https://placehold.it/100x100"
-                    }
-                    alt="Avater"
-                  />
-                  <AvatarFallback>AV</AvatarFallback>
-                </Avatar>
-              </FormLabel>
-              <FormControl>
-                <Input
-                  className="hidden"
-                  type="file"
-                  placeholder="Avater"
-                  {...imageRef}
-                  onChange={(e) => {
-                    // console.log(e.target.files![0]);
-                    setPreviewUrl(URL.createObjectURL(e.target.files![0]));
-                  }}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        /> */}
         <FormField
           control={form.control}
           name="username"

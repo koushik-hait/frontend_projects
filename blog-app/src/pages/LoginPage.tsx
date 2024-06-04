@@ -9,14 +9,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-// import { expressApi } from "@/lib/axios-conf";
 
 export default function LoginPage() {
   const handleSocialLogin = async () => {
     const url = `${import.meta.env.VITE_BACKEND_EXPRESS_URI}/user/github`;
     window.location.href = url;
-    // const res = await expressApi.get("/user/github");
-    // console.log(res);
   };
   return (
     <Card className="mx-auto max-w-md bg-transparent text-white">

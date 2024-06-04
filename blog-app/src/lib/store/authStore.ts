@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
-import { LocalStorageManager } from "../utils";
 
 type User = {
   _id: string;

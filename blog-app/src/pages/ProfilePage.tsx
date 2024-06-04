@@ -1,11 +1,9 @@
 import { getCurrentUser } from "@/apis/user";
 import withAuth from "@/components/WithAuth";
-import { useToast } from "@/components/ui/use-toast";
 import { useAuthStore } from "@/lib/store/authStore";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { useEffect, useState } from "react";
 const ProfilePage = () => {
-  const toast = useToast();
   const [userProfile, setUserProfile] = useState<any>(null);
   const { user } = useAuthStore();
   useEffect(() => {

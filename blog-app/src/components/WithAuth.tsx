@@ -13,7 +13,6 @@ const withAuth = <P extends object>(
 ): ComponentType<Subtract<P, WithAuthProps>> => {
   const WithAuth: React.FC<Subtract<P, WithAuthProps>> = (props) => {
     const { isAuthenticated } = useAuthStore();
-    const navigate = useNavigate();
 
     if (!isAuthenticated) {
       // navigate("/login");

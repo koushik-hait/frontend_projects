@@ -1,7 +1,5 @@
 import withAuth from "@/components/WithAuth";
-import { Editor } from "@/components/editor/BlockNoteEditor";
 import BlogForm from "@/components/forms/BlogForm";
-import React from "react";
 
 const NewBlog = () => {
   return (
