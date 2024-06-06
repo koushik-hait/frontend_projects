@@ -16,3 +16,11 @@ export const blogSchema = z.object({
 });
 
 export type blogType = z.infer<typeof blogSchema>;
+
+export const commentSchema = z.object({
+  content: z.string().min(1, { message: "Comment is required" }),
+  postId: z.string(),
+  author: z.string(),
+});
+
+export type CommentType = z.infer<typeof commentSchema>;

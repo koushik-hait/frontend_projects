@@ -1,22 +1,29 @@
-import Comment from "@/components/Comment";
+import Comment from "@/components/comment/Comment";
 import { Editor } from "@/components/editor/BlockNoteEditor";
+import DeletePostBtn from "@/components/post/DeletePostBtn";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { expressApi } from "@/lib/axios-conf";
+import { useAuthStore } from "@/lib/store/authStore";
 import { Blog } from "@/types";
 import "@blocknote/core/fonts/inter.css";
 import "@blocknote/mantine/style.css";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const DetailBlogPage = () => {
-  const { bid } = useParams();
+  const { pid } = useParams();
   const [blog, setBlog] = useState<Blog | null>(null);
   const [loader, setLoader] = useState<boolean>(false);
+  const { user } = useAuthStore();
+  // const [isAuthor, setIsAuthor] = useState<boolean>(false);
+
+  const isAuthor = blog && user ? blog.author._id === user._id : false;
 
   useEffect(() => {
     (async () => {
       setLoader(true);
-      const response = await expressApi.get(`/blog/reading/${bid}`);
+      const response = await expressApi.get(`/blog/reading/${pid}`);
       if (response?.status === 200) {
         setBlog(response.data.data);
         setLoader(false);
@@ -28,9 +35,11 @@ const DetailBlogPage = () => {
         setLoader(false);
       }
     })();
-  }, [bid]);
+  }, []);
 
-  // const editor = useCreateBlockNote({ initialContent });
+  // if (isAuthenticated) {
+  //   setIsAuthor(user?._id === blog?.author);
+  // }
 
   return (
     <>
@@ -50,21 +59,28 @@ const DetailBlogPage = () => {
                 width={1080}
                 height={720}
               />
+              {isAuthor && (
+                <div className="absolute right-20 top-20">
+                  <Link to={`/edit-post/${blog?._id}`}>
+                    <Button className="mr-3 bg-green-500">Edit</Button>
+                  </Link>
+                  <DeletePostBtn pid={blog?._id!} />
+                </div>
+              )}
             </div>
             <div className="flex flex-row gap-3  items-start">
               <Avatar>
                 <AvatarImage
                   className="object-cover w-12 h-12 border-2 border-gray-300 rounded-full"
-                  src="https://github.com/shadcn.png"
+                  src={blog?.author.avatar.url}
                   alt="@avatar"
                 />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
               <div className="flex flex-col gap-2">
-                <p className="text-slate-100">{blog?.author}</p>
+                <p className="text-slate-100">{blog?.author.username}</p>
                 <p className="text-slate-100">
-                  Posted on
-                  {new Date().toDateString()}
+                  Posted on {new Date(blog?.createdAt!).toDateString()}
                 </p>
               </div>
             </div>
@@ -81,7 +97,7 @@ const DetailBlogPage = () => {
           </div>
         )}
       </div>
-      <Comment />
+      <Comment pid={pid!} />
     </>
   );
 };

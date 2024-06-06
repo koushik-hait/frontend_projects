@@ -16,5 +16,28 @@ export type Blog = {
   publishStatus: string;
   tags: string[];
   category: string;
-  author: string;
+  author: {
+    _id: string;
+    username: string;
+    avatar: {
+      url: string;
+      localPath: string;
+    };
+  };
+};
+
+export type Comment = {
+  _id: string;
+  content: string;
+  postId: string;
+  author: {
+    _id: string;
+    username: string;
+    avatar: {
+      url: string;
+      localPath: string;
+    };
+  };
+  createdAt: string;
+  updatedAt: string;
 };

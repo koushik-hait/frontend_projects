@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { MdSearch } from "react-icons/md";
 import { z } from "zod";
 import { Button } from "../ui/button";
 import {
@@ -45,7 +46,9 @@ const SearchForm = () => {
           )}
         />
 
-        <Button type="submit">search</Button>
+        <Button type="submit" className="bg-transparent">
+          <MdSearch />
+        </Button>
       </form>
     </Form>
   );

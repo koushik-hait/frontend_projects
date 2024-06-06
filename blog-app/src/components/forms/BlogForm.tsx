@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 import { expressApi } from "@/lib/axios-conf";
-import { Category } from "@/types";
+import { Blog, Category } from "@/types";
 import { blogSchema, blogType } from "@/types/schema/blog";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
@@ -28,21 +28,21 @@ import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import TagsInput from "../ui/tags-input";
 import { Textarea } from "../ui/textarea";
 
-const BlogForm = () => {
+const BlogForm = ({ blog }: { blog?: Blog }) => {
   const [contentStr, setContentStr] = useState<string>("");
   const [categories, setCategories] = useState<Category[]>([]);
   const { toast } = useToast();
   const form = useForm<blogType>({
     resolver: zodResolver(blogSchema),
     defaultValues: {
-      title: "",
+      title: blog?.title || "",
       content: "",
-      description: "",
+      description: blog?.description || "",
       coverPhoto: undefined,
-      tags: [],
-      category: "",
-      author: "",
-      publishStatus: "DRAFT",
+      tags: blog?.tags || [],
+      category: blog?.category || "",
+      author: blog?.author._id || "",
+      publishStatus: "DRAFT", //TODO: Add default publish status
     },
   });
 
@@ -64,8 +64,7 @@ const BlogForm = () => {
 
   const handleTagsChange = (tags: string[]) => {
     form.setValue("tags", tags);
-
-    console.log(tags);
+    // console.log(tags);
   };
 
   const onSubmit = async (values: blogType) => {
@@ -140,11 +139,15 @@ const BlogForm = () => {
           )}
         />
 
-        <Editor onChange={onchange} editable={true} />
+        <Editor
+          onChange={onchange}
+          editable={true}
+          initialContent={blog?.content || ""}
+        />
 
         {/* <Label>Add Blogs Tags Here</Label> */}
         <TagsInput
-          initialValue={["#JavaScript", "#Python"]}
+          initialValue={blog?.tags || []}
           onTagsChange={handleTagsChange}
         />
 

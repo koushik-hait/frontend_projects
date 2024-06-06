@@ -1,3 +1,5 @@
+import CardSkeleton from "@/components/loader/CardSkeleton";
+import PostCard from "@/components/post/PostCard";
 import {
   Card,
   CardContent,
@@ -39,41 +41,16 @@ const AllBlogs = () => {
       {loader && (
         <div className="grid grid-cols-3 gap-3 max-w-7xl">
           {Array.from({ length: 9 }).map((_, index) => (
-            <Card className="w-96 bg-base-100 shadow-xl text-white" key={index}>
-              <CardHeader>
-                <CardTitle>
-                  <Skeleton className="h-4 w-[250px]" />
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Skeleton className="h-[150px] w-[250px]" />
-              </CardContent>
-              <CardFooter>
-                <Skeleton className="h-4 w-[250px]" />
-              </CardFooter>
-            </Card>
+            <CardSkeleton key={index} />
           ))}
         </div>
       )}
-      <div className="grid grid-cols-3 gap-3 max-w-7xl">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-w-7xl">
         {!loader &&
           blogs.map((blog) => {
             return (
-              <Link to={`/blog/reading/${blog._id}`} key={blog._id}>
-                <Card className="w-96 h-56 bg-base-100 shadow-xl text-white text-balance overflow-hidden">
-                  <CardHeader>
-                    <CardTitle>{blog.title}</CardTitle>
-                    <CardDescription>{blog.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <img
-                      className="w-[250px] h-[150px] object-cover "
-                      src={blog.coverImage}
-                      alt={blog.title}
-                    />
-                  </CardContent>
-                  <CardFooter>{blog.publishStatus}</CardFooter>
-                </Card>
+              <Link to={`/post/${blog._id}`} key={blog._id}>
+                <PostCard post={blog} />
               </Link>
             );
           })}
