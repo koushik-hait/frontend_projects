@@ -26,7 +26,7 @@ const PostComment = () => {
     })();
   }, []);
   return (
-    <div className="flex-col w-full py-4 mx-auto mt-3 bg-white border-b-2 border-r-2 border-gray-200 sm:px-4 sm:py-4 md:px-4 sm:rounded-lg sm:shadow-sm md:w-2/3">
+    <div className="flex-col w-full py-4 mx-auto mt-3  border-b-2 border-r-2 border-gray-200 sm:px-4 sm:py-4 md:px-4 sm:rounded-lg sm:shadow-sm md:w-2/3">
       {loader ? (
         <div className="flex flex-row md-10 mt-2">
           <Skeleton className="h-10 w-10 rounded-full" />
@@ -49,11 +49,11 @@ const PostComment = () => {
               <div className="flex-col mt-1">
                 <div className="flex items-center flex-1 px-4 font-bold leading-tight">
                   {comment.author.username}
-                  <span className="ml-2 text-xs font-normal text-gray-500">
+                  <span className="ml-2 text-xs font-normal ">
                     {new Date(comment.createdAt).toDateString()}
                   </span>
                 </div>
-                <div className="flex-1 px-2 ml-2 text-sm font-medium leading-loose text-gray-600">
+                <div className="flex-1 px-2 ml-2 text-sm font-medium leading-loose ">
                   <div className="browser-css">
                     {parse(JSON.parse(comment.content))}
                   </div>

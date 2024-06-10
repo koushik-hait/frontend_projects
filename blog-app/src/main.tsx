@@ -16,6 +16,7 @@ import HomePage from "./pages/HomePage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
 import NewBlog from "./pages/NewBlog.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
+import Search from "./pages/Search.tsx";
 import SignupPage from "./pages/SignupPage.tsx";
 
 const router = createBrowserRouter([
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
       {
         path: "/profile",
         element: <ProfilePage />,
+      },
+      {
+        path: "/search",
+        element: <Search />,
       },
       {
         path: "*",

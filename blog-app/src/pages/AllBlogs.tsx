@@ -39,22 +39,24 @@ const AllBlogs = () => {
     <div className="w-full m-5 flex flex-col justify-center items-center gap-2">
       <div className="col-span-5">All Blogs</div>
       {loader && (
-        <div className="grid grid-cols-3 gap-3 max-w-7xl">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-8">
           {Array.from({ length: 9 }).map((_, index) => (
             <CardSkeleton key={index} />
           ))}
         </div>
       )}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-w-7xl">
-        {!loader &&
-          blogs.map((blog) => {
-            return (
-              <Link to={`/post/${blog._id}`} key={blog._id}>
-                <PostCard post={blog} />
-              </Link>
-            );
-          })}
-      </div>
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-4 mt-12 mb-12">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-8">
+          {!loader &&
+            blogs.map((blog) => {
+              return (
+                <Link to={`/post/${blog._id}`} key={blog._id}>
+                  <PostCard post={blog} />
+                </Link>
+              );
+            })}
+        </div>
+      </section>
     </div>
   );
 };

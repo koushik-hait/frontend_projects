@@ -1,18 +1,18 @@
 import { Outlet } from "react-router-dom";
 import Footer from "./components/layout/Footer";
-import Header from "./components/layout/Header";
+// import Header from "./components/layout/Header";
+import HeaderX from "./components/layout/HeaderX";
 
 const App = () => {
   return (
     <>
-      <div className="min-h-screen flex flex-wrap content-between bg-black">
-        <div className="w-full block">
-          <Header />
-          <main>
-            <Outlet />
-          </main>
-          <Footer />
-        </div>
+      <div className="w-full min-h-screen flex flex-col dark">
+        {/* <Header /> */}
+        <HeaderX />
+        <main>
+          <Outlet />
+        </main>
+        <Footer />
       </div>
     </>
   );

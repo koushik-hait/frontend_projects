@@ -53,6 +53,10 @@ const BlogForm = ({ blog }: { blog?: Blog }) => {
         setCategories(response.data.data);
       }
     })();
+    const handleTagsChange = (tags: string[]) => {
+      form.setValue("tags", tags);
+      // console.log(tags);
+    };
   }, []);
 
   const imageRef = form.register("coverPhoto");

@@ -49,7 +49,7 @@ const CommentForm: React.FC<CommentFormProps> = ({ pid }) => {
     }
   };
   return (
-    <div className="flex-col w-full py-4 mx-auto bg-white border-b-2 border-r-2 border-gray-200 sm:px-4 sm:py-4 md:px-4 sm:rounded-lg sm:shadow-sm md:w-2/3">
+    <div className="flex-col w-full py-4 mx-auto border-b-2 border-r-2 border-gray-200 sm:px-4 sm:py-4 md:px-4 sm:rounded-lg sm:shadow-sm md:w-2/3">
       <div className="flex flex-row items-center gap-3">
         <Avatar>
           <AvatarImage
@@ -81,7 +81,7 @@ const CommentForm: React.FC<CommentFormProps> = ({ pid }) => {
                 <Button type="button">
                   {" "}
                   Commenting...{" "}
-                  <div className="w-10 h-10 border-4 border-dashed rounded-full animate-spin dark:border-violet-600"></div>
+                  <div className="w-10 h-10 border-4 border-dashed rounded-full animate-spin dark:border-orange-600"></div>
                 </Button>
               ) : (
                 <Button type="submit" disabled={!isAuthenticated}>

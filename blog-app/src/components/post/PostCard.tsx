@@ -1,6 +1,12 @@
 import { Blog } from "@/types";
-import React from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
+import { Link } from "react-router-dom";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 
 type PostCardProps = {
   post: Blog;
@@ -8,20 +14,37 @@ type PostCardProps = {
 
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
   return (
-    <Card className="w-96 h-56 bg-base-100 shadow-xl text-white text-balance overflow-hidden">
-      <CardHeader>
-        <CardTitle>{post.title}</CardTitle>
-        {/* <CardDescription>{post.description}</CardDescription> */}
-      </CardHeader>
-      <CardContent>
-        <img
-          className="w-[250px] h-[150px] object-cover "
-          src={post.coverImage}
-          alt={post.title}
-        />
-      </CardContent>
-      {/* <CardFooter>{post.publishStatus}</CardFooter> */}
-    </Card>
+    <article className="group relative rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transform duration-200">
+      <Card className="">
+        <CardHeader>
+          <CardTitle></CardTitle>
+          {/* <CardDescription>{post.description}</CardDescription> */}
+        </CardHeader>
+        <CardContent className="relative w-full h-80 md:h-64 lg:h-44">
+          <img
+            className="w-full h-full object-center object-cover "
+            src={post.coverImage}
+            alt={post.title}
+          />
+        </CardContent>
+        <CardFooter className="px-3 py-4 flex flex-col justify-start items-start h-80 md:h-64 lg:h-44">
+          <div className="text-sm text-white flex flex-wrap">
+            {post.tags.map((tag) => (
+              <Link
+                key={tag}
+                className="bg-orange-600 hover:text-gray-400 py-1 px-2 text-white rounded-lg m-1"
+                to={`/tag/${tag.split("#")[1]}`}
+              >
+                {tag}
+              </Link>
+            ))}
+          </div>
+          <p className="text-base font-semibold text-gray-100 group-hover:text-orange-600">
+            {post.title}
+          </p>
+        </CardFooter>
+      </Card>
+    </article>
   );
 };
 

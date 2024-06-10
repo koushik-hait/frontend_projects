@@ -7,7 +7,7 @@ type CommentProps = {
 
 const Comment: React.FC<CommentProps> = ({ pid }) => {
   return (
-    <section className="relative flex items-center justify-center antialiased bg-white dark:bg-slate-900 min-w-7xl">
+    <section className="relative flex items-center justify-center antialiased min-w-7xl">
       <div className="container px-0 mx-auto sm:px-5">
         <CommentForm pid={pid!} />
         <PostComment />
