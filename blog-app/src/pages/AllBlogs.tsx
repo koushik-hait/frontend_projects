@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useToast } from "@/hooks/use-toast";
 import { expressApi } from "@/lib/axios-conf";
 import { Blog } from "@/types/index";
 import { randomInt } from "crypto";
@@ -21,21 +22,38 @@ const AllBlogs = () => {
   const [page, setPage] = useState<number>(1);
   const [visible, setVisible] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
+  const [error, setError] = useState<string | null>(null);
+  const { toast } = useToast();
 
   const getAllBlogs = async () => {
+    setLoader(true);
+    setError(null);
     const response = await expressApi.get(`/blog/all?page=${page}&limit=10`);
     if (response?.status === 200) {
-      console.log("All blog fetched successfully");
+      toast({
+        title: "All blog fetched successfully",
+        description: "All blog fetched successfully",
+        variant: "default",
+      });
       const payload = response.data.data;
       setTotalItems(payload.totalItems);
       setVisible((prev) => prev + payload.data.length);
       setBlogs((prev) => [...new Set([...prev, ...payload.data])]);
       setLoader(false);
     } else if (response?.status === 404) {
-      console.log("No blog found");
+      toast({
+        title: "No blog found",
+        description: "No blog found",
+        variant: "destructive",
+      });
       setLoader(false);
     } else {
-      console.log("Something went wrong");
+      toast({
+        title: "Something went wrong",
+        description: "Something went wrong",
+        variant: "destructive",
+      });
+      setError("Something went wrong");
       setLoader(false);
     }
   };
@@ -64,6 +82,7 @@ const AllBlogs = () => {
 
   return (
     <div className="w-full m-5 flex flex-col justify-center items-center gap-2">
+      {error && <p className="text-red-500">{error}</p>}
       <div className="col-span-5">All Blogs</div>
       {loader && (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-8">

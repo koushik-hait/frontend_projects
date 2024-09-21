@@ -28,7 +28,7 @@ const SearchForm = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof querySchema>) => {
-    console.log(values);
+    // console.log(values);
     navigate(`/search?q=${values.q}`);
   };
   return (
