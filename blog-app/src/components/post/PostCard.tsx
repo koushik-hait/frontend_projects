@@ -13,11 +13,37 @@ type PostCardProps = {
 };
 
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
+  const handleImageError = (event: React.SyntheticEvent<HTMLImageElement>) => {
+    // event.currentTarget.style.display = "none";
+    event.currentTarget.src = "https://via.placeholder.com/150";
+  };
+
   return (
     <article className="group relative rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transform duration-200">
       <Card className="">
         <CardHeader>
-          <CardTitle></CardTitle>
+          <CardTitle>
+            <div className="relative top-0 right-0 m-3">
+              <Link
+                to={`/author/${post.author[0]._id}`}
+                className="hover:text-orange-600"
+              >
+                <div className="flex flex-row items-center mb-3">
+                  <img
+                    onError={handleImageError}
+                    src={post.author[0]?.avatar?.url}
+                    width={150}
+                    height={150}
+                    alt="User avatar"
+                    className="rounded-full w-20 h-20 object-cover object-center"
+                  />
+                  <p className="text-md font-semibold text-gray-100 group-hover:text-orange-600">
+                    {post.author[0].username}
+                  </p>
+                </div>
+              </Link>
+            </div>
+          </CardTitle>
           {/* <CardDescription>{post.description}</CardDescription> */}
         </CardHeader>
         <CardContent className="relative w-full h-80 md:h-64 lg:h-44">

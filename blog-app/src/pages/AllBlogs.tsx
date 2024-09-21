@@ -17,64 +17,56 @@ import { Link } from "react-router-dom";
 
 const AllBlogs = () => {
   const [blogs, setBlogs] = useState<Blog[]>([]);
-  const [loader, setLoader] = useState<boolean>(false);
+  const [loader, setLoader] = useState<boolean>(true);
   const [page, setPage] = useState<number>(1);
+  const [visible, setVisible] = useState(0);
+  const [totalItems, setTotalItems] = useState(0);
+
+  const getAllBlogs = async () => {
+    const response = await expressApi.get(`/blog/all?page=${page}&limit=10`);
+    if (response?.status === 200) {
+      console.log("All blog fetched successfully");
+      const payload = response.data.data;
+      setTotalItems(payload.totalItems);
+      setVisible((prev) => prev + payload.data.length);
+      setBlogs((prev) => [...new Set([...prev, ...payload.data])]);
+      setLoader(false);
+    } else if (response?.status === 404) {
+      console.log("No blog found");
+      setLoader(false);
+    } else {
+      console.log("Something went wrong");
+      setLoader(false);
+    }
+  };
 
   const handleScroll = () => {
-    if (
-      document.body.scrollHeight - 300 <
-      window.scrollY + window.innerHeight
-    ) {
-      setLoader(true);
+    const { innerHeight, scrollY } = window;
+    const { scrollHeight } = document.documentElement;
+
+    if (innerHeight + scrollY >= scrollHeight) {
+      setPage((prev) => prev + 1);
     }
   };
 
   useEffect(() => {
-    setLoader(true);
-    (async () => {
-      const response = await expressApi.get(`/blog/all?page=${page}&limit=10`);
-      if (response?.status === 200) {
-        console.log("All blog fetched successfully");
-        const payload = response.data.data;
-        setBlogs((prev) => [...new Set([...prev, ...payload.data])]);
-        setLoader(false);
-      } else if (response?.status === 404) {
-        console.log("No blog found");
-        setLoader(false);
-      } else {
-        console.log("Something went wrong");
-        setLoader(false);
-      }
-    })();
+    getAllBlogs();
   }, [page]);
 
-  const handleLoadMore = () => {
-    setPage((prev) => prev + 1);
-  };
-
   useEffect(() => {
-    if (loader) handleLoadMore();
-  }, [loader]);
-
-  const debounce: any = (func: (...args: any) => void, delay: number) => {
-    let timeoutId: NodeJS.Timeout | null = null;
-    return function (...args: any) {
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
-      timeoutId = setTimeout(() => {
-        func(...args);
-      }, delay);
+    visible < totalItems && totalItems > 0
+      ? window.addEventListener("scroll", handleScroll)
+      : window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
     };
-  };
-
-  window.addEventListener("scroll", debounce(handleScroll, 500));
+  }, [visible]);
 
   return (
     <div className="w-full m-5 flex flex-col justify-center items-center gap-2">
       <div className="col-span-5">All Blogs</div>
       {loader && (
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-8">
           {Array.from({ length: 9 }).map((_, index) => (
             <CardSkeleton key={index} />
           ))}

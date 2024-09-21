@@ -1,3 +1,18 @@
+export type User = {
+  _id: string;
+  username: string;
+  email: string;
+  avatar: {
+    url: string;
+    localPath: string;
+  };
+  isEmailVerified: boolean;
+  loginType: string;
+  user_role: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
 export type Category = {
   _id: string;
   name: string;
@@ -16,14 +31,7 @@ export type Blog = {
   publishStatus: string;
   tags: string[];
   category: string;
-  author: {
-    _id: string;
-    username: string;
-    avatar: {
-      url: string;
-      localPath: string;
-    };
-  };
+  author: User[];
 };
 
 export type Comment = {
