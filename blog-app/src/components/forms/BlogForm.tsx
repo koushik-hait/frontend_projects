@@ -41,7 +41,7 @@ const BlogForm = ({ blog }: { blog?: Blog }) => {
       coverPhoto: undefined,
       tags: blog?.tags || [],
       category: blog?.category || "",
-      author: blog?.author._id || "",
+      author: blog?.author[0]._id || "",
       publishStatus: "DRAFT", //TODO: Add default publish status
     },
   });

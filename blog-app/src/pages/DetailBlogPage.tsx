@@ -18,7 +18,7 @@ const DetailBlogPage = () => {
   const { user } = useAuthStore();
   // const [isAuthor, setIsAuthor] = useState<boolean>(false);
 
-  const isAuthor = blog && user ? blog.author._id === user._id : false;
+  const isAuthor = blog && user ? blog.author[0]._id === user._id : false;
 
   useEffect(() => {
     (async () => {
@@ -72,13 +72,13 @@ const DetailBlogPage = () => {
               <Avatar>
                 <AvatarImage
                   className="object-cover w-12 h-12 border-2 border-gray-300 rounded-full"
-                  src={blog?.author.avatar.url}
+                  src={blog?.author[0].avatar.url}
                   alt="@avatar"
                 />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
               <div className="flex flex-col gap-2">
-                <p className="text-slate-100">{blog?.author.username}</p>
+                <p className="text-slate-100">{blog?.author[0].username}</p>
                 <p className="text-slate-100">
                   Posted on {new Date(blog?.createdAt!).toDateString()}
                 </p>
