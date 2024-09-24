@@ -25,7 +25,7 @@ const DetailBlogPage = () => {
       setLoader(true);
       const response = await expressApi.get(`/blog/reading/${pid}`);
       if (response?.status === 200) {
-        setBlog(response.data.data);
+        setBlog(response.data.data[0]);
         setLoader(false);
       } else if (response?.status === 404) {
         console.log("No blog found");
