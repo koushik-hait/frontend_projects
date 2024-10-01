@@ -1,40 +1,41 @@
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useAuthStore } from "@/lib/store/authStore";
-import { Menu, Package2 } from "lucide-react";
+import { Menu, NotebookPen, Package2, Snowflake } from "lucide-react";
 import { Link } from "react-router-dom";
 import SearchForm from "../forms/SearchForm";
-import ProfileButton from "./ProfileButton";
+import ProfileButton from "./profile-button";
 
 const HeaderX = () => {
   const { user, isAuthenticated, logout } = useAuthStore();
   return (
-    <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
+    <header className="sticky top-0 flex z-20 h-16 items-center lg:justify-evenly gap-4 border-b bg-background px-4 md:px-6">
       <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
         <Link
           to="/"
           className="flex items-center gap-2 text-lg font-semibold md:text-base"
         >
-          <Package2 className="h-6 w-6" />
-          <span className="sr-only">Acme Inc</span>
-        </Link>
-        <Link
-          to="/"
-          className="text-muted-foreground transition-colors hover:text-foreground"
-        >
-          Home
-        </Link>
-        <Link
-          to="/all-posts"
-          className="text-muted-foreground transition-colors hover:text-foreground"
-        >
-          Posts
+          <Snowflake
+            size={28}
+            color="#165f02"
+            strokeWidth={1.5}
+            absoluteStrokeWidth
+          />
+          <span className="sr-only">D3vdut</span>
         </Link>
         <Link
           to="/add-post"
-          className="text-muted-foreground transition-colors hover:text-foreground"
+          className="text-muted-foreground text-xl transition-colors hover:text-foreground"
         >
-          Add Posts
+          <span className="flex items-center gap-2">
+            <NotebookPen
+              size={28}
+              color="#165f02"
+              strokeWidth={1.5}
+              absoluteStrokeWidth
+            />{" "}
+            Write
+          </span>
         </Link>
       </nav>
       <Sheet>
@@ -50,27 +51,36 @@ const HeaderX = () => {
               to="/"
               className="flex items-center gap-2 text-lg font-semibold"
             >
-              <Package2 className="h-6 w-6" />
-              <span className="sr-only">Acme Inc</span>
-            </Link>
-            <Link to="/" className="hover:text-foreground">
-              Home
-            </Link>
-            <Link
-              to="/all-posts"
-              className="text-muted-foreground hover:text-foreground"
-            >
-              Posts
+              <Snowflake
+                size={28}
+                color="#165f02"
+                strokeWidth={1.5}
+                absoluteStrokeWidth
+              />
+              <span className="sr-only">D3vdut</span>
             </Link>
             <Link
               to="/add-post"
-              className="text-muted-foreground hover:text-foreground"
+              className="text-muted-foreground text-xl transition-colors hover:text-foreground"
             >
-              Add Post
+              <span className="flex items-center gap-2">
+                <NotebookPen
+                  size={28}
+                  color="#165f02"
+                  strokeWidth={1.5}
+                  absoluteStrokeWidth
+                />{" "}
+                Write
+              </span>
             </Link>
           </nav>
         </SheetContent>
       </Sheet>
+      <div className="w-full flex items-center gap-4 justify-center">
+        <Link to="/" className="text-3xl font-bold text-green-600 capitalize">
+          D3vdut
+        </Link>
+      </div>
       <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
         <SearchForm />
         {isAuthenticated ? (

@@ -85,7 +85,7 @@ const LoginForm = () => {
                   {...field}
                 />
               </FormControl>
-              <Link to={"/forget-password"} className="text-right">
+              <Link to={"/forgot-password"} className="text-right">
                 forget password?
               </Link>
               <FormMessage />

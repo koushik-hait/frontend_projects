@@ -1,23 +1,21 @@
 import CardSkeleton from "@/components/loader/CardSkeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 import { expressApi } from "@/lib/axios-conf";
-import { Blog, IPayload, IResponse } from "@/types";
-import React, { useEffect } from "react";
-import { Link, useSearchParams } from "react-router-dom";
-import { BlogPostCard } from "../components/post/post-card";
+import { Blog, IPayload, IResponse } from "@/types/index";
+import { useEffect } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useFilters } from "@/lib/store/filterStore";
+import { BlogPostCard } from "@/components/post/post-card";
 
-const Search = () => {
+const AllBlogs = () => {
   const { page, setPage, limit, setLimit } = useFilters();
-
-  const [searchParams] = useSearchParams();
-  const query = searchParams.get("q");
-  const searchBlogs = async (pageParam: number, query: string) => {
+  const fetchBlogs = async ({ pageParam }: { pageParam: number }) => {
     const { data } = await expressApi.get<IResponse<IPayload<Blog[]>>>(
-      `/blog/search?q=${query}&page=${pageParam}&limit=${limit}`
+      `/blog/all?page=${pageParam}&limit=${limit}`
     );
     return data.data;
   };
+
   const {
     data,
     error,
@@ -27,20 +25,17 @@ const Search = () => {
     isFetchingNextPage,
     status,
   } = useInfiniteQuery({
-    queryKey: ["search"],
-    queryFn: () => searchBlogs(page, query!),
+    queryKey: ["allBlogs"],
+    queryFn: fetchBlogs,
     initialPageParam: 1,
     staleTime: 1000 * 60 * 60 * 24 * 7,
     gcTime: 1000 * 60 * 60 * 24 * 7,
-    getNextPageParam: (lastPage) => {
-      return lastPage.nextPage;
-    },
+    getNextPageParam: (lastPage) => lastPage.nextPage,
   });
 
   const handleScroll = () => {
     const { innerHeight, scrollY } = window;
     const { scrollHeight } = document.documentElement;
-
     if (innerHeight + scrollY >= scrollHeight) {
       fetchNextPage();
     }
@@ -56,13 +51,16 @@ const Search = () => {
   }, [data?.pages[0].hasNextPage]);
 
   return (
-    <div className="w-full m-5 flex flex-col justify-center items-center gap-2">
-      {status === "pending" && <div>Loading...</div>}
-      {status === "error" && (
-        <div className="text-red-500">{error.message}</div>
-      )}
-      <div className="col-span-5">Search Results for "{query}"</div>
-      {status === "success" && (
+    <div className="flex flex-col gap-2">
+      {status === "pending" ? (
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-8">
+          {Array.from({ length: 9 }).map((_, index) => (
+            <CardSkeleton key={index} />
+          ))}
+        </div>
+      ) : status === "error" ? (
+        <div className="text-center">Something went wrong {error.message}</div>
+      ) : (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-4 mt-12 mb-12">
           {data?.pages?.map((page, i) => (
             <div className="grid md:grid-cols-2 gap-x-6 gap-y-8 mt-5">
@@ -97,4 +95,4 @@ const Search = () => {
   );
 };
 
-export default Search;
+export default AllBlogs;

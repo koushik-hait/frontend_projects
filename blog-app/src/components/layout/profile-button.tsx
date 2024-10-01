@@ -11,7 +11,7 @@ import {
 import { useAuthStore } from "@/lib/store/authStore";
 import { useNavigate } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import LogoutButton from "./LogoutButton";
+import LogoutButton from "./logout-button";
 
 const ProfileButton = () => {
   const { user } = useAuthStore();
@@ -35,8 +35,10 @@ const ProfileButton = () => {
           <DropdownMenuItem onClick={() => navigate("/profile")}>
             Profile
           </DropdownMenuItem>
+          <DropdownMenuItem>Library</DropdownMenuItem>
+          <DropdownMenuItem>Stats</DropdownMenuItem>
         </DropdownMenuGroup>
-        <DropdownMenuItem>
+        <DropdownMenuItem className="cursor-pointer items-center">
           <LogoutButton />
         </DropdownMenuItem>
       </DropdownMenuContent>

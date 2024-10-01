@@ -57,7 +57,7 @@ const TagsInput = ({ initialValue, onTagsChange }: TagsInputProps) => {
       <Input
         type="text"
         onKeyDown={handleKeyDown}
-        className="grow p-2 outline-none border-none"
+        className="w-full text-3xl font-bold border-none focus:outline-none focus:ring-0 focus:border-none placeholder-gray-300 placeholder-opacity-100 bg-transparent"
         placeholder="Add Tags Here..."
       />
     </div>

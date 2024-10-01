@@ -12,7 +12,7 @@ export const blogSchema = z.object({
   tags: z.array(z.string()).optional(),
   category: z.string().optional(),
   author: z.string().optional(),
-  publishStatus: z.enum(["DRAFT", "PUBLISHED"]),
+  status: z.enum(["DRAFT", "PUBLISHED"]),
 });
 
 export type blogType = z.infer<typeof blogSchema>;

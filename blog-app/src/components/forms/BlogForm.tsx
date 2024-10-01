@@ -1,4 +1,3 @@
-import { getAllCategories } from "@/apis/blog";
 import { Editor } from "@/components/editor/BlockNoteEditor";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,7 +18,7 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 import { expressApi } from "@/lib/axios-conf";
-import { Blog, Category } from "@/types";
+import { Blog, Category, IPayload, IResponse } from "@/types";
 import { blogSchema, blogType } from "@/types/schema/blog";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
@@ -27,10 +26,30 @@ import { useForm } from "react-hook-form";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import TagsInput from "../ui/tags-input";
 import { Textarea } from "../ui/textarea";
+import { useQuery } from "@tanstack/react-query";
+import { CustomImageUpload } from "../custom-image-upload";
+
+const getAllCategories = async () => {
+  const { data } = await expressApi.get<IResponse<IPayload<Category[]>>>(
+    `/blog/category/all`
+  );
+  return data.data;
+};
 
 const BlogForm = ({ blog }: { blog?: Blog }) => {
+  const {
+    data: categories,
+    refetch,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["categories"],
+    queryFn: getAllCategories,
+    refetchOnWindowFocus: false,
+    staleTime: 1000 * 60 * 60 * 24 * 7,
+  });
+  console.log(categories);
   const [contentStr, setContentStr] = useState<string>("");
-  const [categories, setCategories] = useState<Category[]>([]);
   const { toast } = useToast();
   const form = useForm<blogType>({
     resolver: zodResolver(blogSchema),
@@ -41,18 +60,12 @@ const BlogForm = ({ blog }: { blog?: Blog }) => {
       coverPhoto: undefined,
       tags: blog?.tags || [],
       category: blog?.category || "",
-      author: blog?.author[0]._id || "",
-      publishStatus: "DRAFT", //TODO: Add default publish status
+      author: blog?.author.account._id || "",
+      status: "DRAFT", //TODO: Add default publish status
     },
   });
 
   useEffect(() => {
-    (async () => {
-      const response = await getAllCategories();
-      if (response.status == 200) {
-        setCategories(response.data.data);
-      }
-    })();
     const handleTagsChange = (tags: string[]) => {
       form.setValue("tags", tags);
       // console.log(tags);
@@ -80,7 +93,7 @@ const BlogForm = ({ blog }: { blog?: Blog }) => {
         "description",
         values.description ? values.description : ""
       );
-      formData.append("status", values.publishStatus);
+      formData.append("status", values.status);
       formData.append("coverPhoto", values.coverPhoto[0]);
       formData.append("tags", JSON.stringify(values.tags));
       const response = await expressApi.post("/blog/create", formData, {
@@ -97,6 +110,7 @@ const BlogForm = ({ blog }: { blog?: Blog }) => {
       console.log(error);
     }
   };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -105,9 +119,14 @@ const BlogForm = ({ blog }: { blog?: Blog }) => {
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Blog Title</FormLabel>
+              {/* <FormLabel>Blog Title</FormLabel> */}
               <FormControl>
-                <Input type="text" placeholder="title" {...field} />
+                <Input
+                  type="text"
+                  placeholder="Enter your post title"
+                  className="w-full text-3xl font-bold border-none focus:outline-none focus:ring-0 focus:border-none placeholder-gray-300 placeholder-opacity-100 bg-transparent"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -118,9 +137,18 @@ const BlogForm = ({ blog }: { blog?: Blog }) => {
           name="coverPhoto"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Blog Cover Photo</FormLabel>
+              {/* <FormLabel>Blog Cover Photo</FormLabel> */}
               <FormControl>
-                <Input type="file" placeholder="Cover Photo" {...imageRef} />
+                <CustomImageUpload
+                  onImageChange={field.onChange}
+                  {...imageRef}
+                />
+                {/* <Input
+                  type="file"
+                  placeholder="Cover Photo"
+                  className="w-full text-3xl font-bold border-none focus:outline-none focus:ring-0 focus:border-none placeholder-gray-300 placeholder-opacity-100 bg-transparent"
+                  {...imageRef}
+                /> */}
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -131,9 +159,10 @@ const BlogForm = ({ blog }: { blog?: Blog }) => {
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Blog Description</FormLabel>
+              {/* <FormLabel>Blog Description</FormLabel> */}
               <FormControl>
                 <Textarea
+                  className="w-full text-3xl font-bold border-none focus:outline-none focus:ring-0 focus:border-none placeholder-gray-300 placeholder-opacity-100 bg-transparent"
                   placeholder="Add Blog description here..."
                   {...field}
                 />
@@ -168,8 +197,11 @@ const BlogForm = ({ blog }: { blog?: Blog }) => {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {categories.map((category) => (
-                    <SelectItem key={category._id} value={category._id}>
+                  {categories?.data.map((category) => (
+                    <SelectItem
+                      key={category._id}
+                      value={`category-${category._id}`}
+                    >
                       {category.name}
                     </SelectItem>
                   ))}
@@ -182,7 +214,7 @@ const BlogForm = ({ blog }: { blog?: Blog }) => {
 
         <FormField
           control={form.control}
-          name="publishStatus"
+          name="status"
           render={({ field }) => (
             <FormItem className="space-y-3">
               <FormLabel>Select Publish Status</FormLabel>

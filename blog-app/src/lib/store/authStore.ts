@@ -1,26 +1,16 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
-
-type User = {
-  _id: string;
-  username: string;
-  email: string;
-  isEmailVerified: boolean;
-  loginType: string;
-  role: string;
-  avatar: {
-    url: string;
-    localPath: string;
-  };
-  createdAt: string;
-  updatedAt: string;
-};
+import { expressApi } from "../axios-conf";
+import { getCurrentUser } from "@/apis/user";
+import { IUser } from "@/types";
 
 type AuthState = {
-  user: User | null;
+  user: IUser | null;
   isAuthenticated: boolean;
-  login: (user: User) => void;
+  userProfile: any | null;
+  login: (user: IUser) => void;
   logout: () => void;
+  getUserProfile: () => void;
 };
 
 export const useAuthStore = create<AuthState>()(
@@ -28,11 +18,23 @@ export const useAuthStore = create<AuthState>()(
     (set, get) => ({
       user: null,
       isAuthenticated: false,
-      login: (user: User) => {
+      userProfile: null,
+      login: (user: IUser) => {
         set({ user, isAuthenticated: true });
       },
       logout: () => {
         set({ user: null, isAuthenticated: false });
+      },
+      getUserProfile: async () => {
+        const response = await getCurrentUser();
+        if (response?.status === 200) {
+          set({ userProfile: response.data.data[0], isAuthenticated: true });
+          console.log(response.data.data[0]);
+        } else if (response?.status === 404) {
+          console.log("No user found");
+        } else {
+          console.log("Something went wrong");
+        }
       },
     }),
     {
