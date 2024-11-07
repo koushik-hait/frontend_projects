@@ -9,17 +9,20 @@ import DetailBlogPage from "./pages/blog/DetailBlogPage.tsx";
 import EditBlogPage from "./pages/blog/EditBlogPage.tsx";
 import HomePage from "./pages/HomePage.tsx";
 import LoginPage from "./pages/auth/LoginPage.tsx";
-import NewBlog from "./pages/blog/NewBlog.tsx";
+import NewBlog from "./features/post/components/NewBlog.tsx";
 import ProfilePage from "./pages/auth/profile-page.tsx";
 import Search from "./pages/Search.tsx";
 import SignupPage from "./pages/auth/SignupPage.tsx";
 import ErrorBoundary from "./components/Error.tsx";
 import { ErrorElement } from "./components/error-element.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Verify } from "crypto";
 import ForgotPassword from "./pages/auth/forgot-password.tsx";
 import ResetPassword from "./pages/auth/reset-password.tsx";
 import VerifyEmail from "./pages/auth/verify-email.tsx";
+import { Dashboard } from "./features/admin/pages/dashboard.tsx";
+import AdminApp from "./features/admin/admin-app.tsx";
+import { AllUsers } from "./features/admin/pages/all-users.tsx";
+import AllPosts from "./features/admin/pages/AllPosts.tsx";
 
 const router = createBrowserRouter([
   {
@@ -36,28 +39,28 @@ const router = createBrowserRouter([
       },
 
       {
-        path: "/all-posts",
+        path: "all-posts",
         element: <AllBlogs />,
       },
       {
-        path: "/add-post",
+        path: "add-post",
         element: <NewBlog />,
       },
       {
-        path: "/edit-post/:pid",
+        path: "edit-post/:pid",
         element: <EditBlogPage />,
       },
       {
-        path: "/post/:pid",
+        path: "post/:pid",
         element: <DetailBlogPage />,
       },
       {
-        path: "/profile",
+        path: "profile",
         element: <ProfilePage />,
         errorElement: <ErrorElement />,
       },
       {
-        path: "/search",
+        path: "search",
         element: <Search />,
       },
       {
@@ -67,23 +70,46 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/login",
+    path: "admin",
+    element: <AdminApp />,
+    errorElement: <ErrorElement />,
+    children: [
+      {
+        path: "",
+        element: <Dashboard />,
+      },
+      {
+        path: "users",
+        element: <AllUsers />,
+      },
+      {
+        path: "posts",
+        element: <AllPosts />,
+      },
+      {
+        path: "*",
+        element: <NotFound />,
+      },
+    ],
+  },
+  {
+    path: "login",
     element: <LoginPage />,
   },
   {
-    path: "/signup",
+    path: "signup",
     element: <SignupPage />,
   },
   {
-    path: "/reset-password",
+    path: "reset-password/:resetPasswordToken",
     element: <ResetPassword />,
   },
   {
-    path: "/forgot-password",
+    path: "forgot-password",
     element: <ForgotPassword />,
   },
   {
-    path: "/verify-email",
+    path: "verify-email",
     element: <VerifyEmail />,
   },
   {

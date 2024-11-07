@@ -1,5 +1,5 @@
 import withAuth from "@/components/WithAuth";
-import BlogForm from "@/components/forms/BlogForm";
+import BlogForm from "@/features/post/forms/BlogForm";
 
 const NewBlog = () => {
   return (

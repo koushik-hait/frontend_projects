@@ -1,4 +1,4 @@
-import SignupForm from "@/components/forms/SignupForm";
+import SignupForm from "@/features/auth/forms/SignupForm";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -8,25 +8,29 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Link } from "react-router-dom";
+import { Notification } from "@/components/layout/notification";
 
 export default function SignupPage() {
   return (
-    <Card className="mx-auto max-w-md bg-black text-white">
-      <CardHeader>
-        <CardTitle className="text-xl">Sign Up</CardTitle>
-        <CardDescription>
-          Enter your information to create an account
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <SignupForm />
-        <Button variant="outline" className="w-full mt-3">
-          Sign up with GitHub
-        </Button>
-        <div className="mt-4 text-center text-sm">
-          Already have an account? <Link to={"/login"}>Sign in</Link>
-        </div>
-      </CardContent>
-    </Card>
+    <>
+      <Card className="mx-auto max-w-md bg-black text-white">
+        <CardHeader>
+          <CardTitle className="text-xl">Sign Up</CardTitle>
+          <CardDescription>
+            Enter your information to create an account
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <SignupForm />
+          <Button variant="outline" className="w-full mt-3">
+            Sign up with GitHub
+          </Button>
+          <div className="mt-4 text-center text-sm">
+            Already have an account? <Link to={"/login"}>Sign in</Link>
+          </div>
+        </CardContent>
+      </Card>
+      <Notification />
+    </>
   );
 }

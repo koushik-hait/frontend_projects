@@ -1,5 +1,5 @@
 import { UseQueryResult } from "@tanstack/react-query";
-import CommentForm from "../forms/CommentForm";
+import CommentForm from "./forms/CommentForm";
 import PostComment from "./PostComment";
 import { IPayload, IComment } from "@/types";
 import { useParams } from "react-router-dom";

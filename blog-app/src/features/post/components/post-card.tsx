@@ -1,17 +1,7 @@
-import { useState } from "react";
-import { Image } from "@/components/ui/image";
-import { format } from "date-fns";
-import {
-  Heart,
-  MessageCircle,
-  Bookmark,
-  BookmarkCheck,
-  MoreVertical,
-  Share2,
-  Flag,
-} from "lucide-react";
+import { BookmarkButton } from "@/features/post/components/BookmarkButton";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -19,15 +9,28 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Image } from "@/components/ui/image";
 import { Blog } from "@/types";
+import { format } from "date-fns";
+import {
+  Bookmark,
+  BookmarkCheck,
+  Facebook,
+  Flag,
+  Heart,
+  MessageCircle,
+  MoreVertical,
+  Share2,
+} from "lucide-react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { LikeDislikeButton } from "./like-button";
 
 type PostCardProps = {
   post: Blog;
@@ -35,7 +38,6 @@ type PostCardProps = {
 
 export const BlogPostCard: React.FC<PostCardProps> = ({ post }) => {
   const [isLiked, setIsLiked] = useState(post?.isLiked);
-  const [isBookmarked, setIsBookmarked] = useState(post.isBookmarked);
 
   return (
     <Card className="w-full max-w-md mx-auto">
@@ -43,16 +45,16 @@ export const BlogPostCard: React.FC<PostCardProps> = ({ post }) => {
         <div className="flex items-center space-x-2">
           <Avatar className="h-8 w-8">
             <AvatarImage
-              src={post?.author.account.avatar?.url}
-              alt={post?.author.account.username}
+              src={post?.author?.account?.avatar?.url}
+              alt={post?.author?.account?.username}
             />
             <AvatarFallback>
-              {post?.author.account.username.charAt(0)}
+              {post?.author?.account?.username.charAt(0)}
             </AvatarFallback>
           </Avatar>
           <div>
             <p className="text-sm font-medium leading-none">
-              {post?.author.account.username}
+              {post?.author?.account?.username}
             </p>
             <p className="text-xs text-muted-foreground">
               {format(new Date(post?.createdAt), "MMM d, yyyy")}
@@ -69,6 +71,10 @@ export const BlogPostCard: React.FC<PostCardProps> = ({ post }) => {
           <DropdownMenuContent align="end">
             <DropdownMenuItem>
               <Share2 className="mr-2 h-4 w-4" />
+              <span>Share</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Facebook color="#0b6a93" />
               <span>Share</span>
             </DropdownMenuItem>
             <DropdownMenuItem>
@@ -106,38 +112,20 @@ export const BlogPostCard: React.FC<PostCardProps> = ({ post }) => {
           ))}
         </div>
         <div className="flex items-center justify-between">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setIsLiked(!isLiked)}
-            className={post.isLiked ? "text-red-500 dark:text-red-400" : ""}
-          >
-            {isLiked ? (
-              <Heart className="mr-2 h-4 w-4 fill-pink-700" />
-            ) : (
-              <Heart className="mr-2 h-4 w-4" />
-            )}
-            <span className="sr-only">Like</span>
-            {post.likes}
-          </Button>
+          <LikeDislikeButton
+            likes={post?.likes}
+            isLiked={post?.isLiked}
+            postId={post?._id}
+          />
           <Button variant="ghost" size="sm">
             <MessageCircle className="mr-2 h-4 w-4" />
             {post.comments}
           </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setIsBookmarked(!isBookmarked)}
-          >
-            <Button variant="ghost" size="sm">
-              {isBookmarked ? (
-                <BookmarkCheck className="h-4 w-4" />
-              ) : (
-                <Bookmark className="h-4 w-4" />
-              )}
-              {post.bookmarks}
-            </Button>
-          </Button>
+          <BookmarkButton
+            isBookmarked={post.isBookmarked}
+            bookmarks={post.bookmarks}
+            postId={post?._id}
+          />
         </div>
       </CardContent>
     </Card>

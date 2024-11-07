@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { IComment } from "@/types";
 import parse from "html-react-parser";
 import { format } from "date-fns";
+import { LikeDislikeButton } from "@/features/post/components/like-button";
 
 export default function CommentCard({ comment }: { comment: IComment }) {
   const [likes, setLikes] = useState(0);
@@ -19,20 +20,17 @@ export default function CommentCard({ comment }: { comment: IComment }) {
       <CardContent className="p-4">
         <div className="flex items-start space-x-4">
           <Avatar className="w-10 h-10">
-            <AvatarImage
-              src={comment?.author[0]?.avatar.url}
-              alt="User avatar"
-            />
+            <AvatarImage src={comment?.author?.avatar.url} alt="User avatar" />
             <AvatarFallback>
               <div className="w-12 h-12 border-2 rounded-full flex items-center justify-center">
-                {comment.author[0].username.substring(0, 2).toUpperCase()}
+                {comment.author?.username.substring(0, 2).toUpperCase()}
               </div>
             </AvatarFallback>
           </Avatar>
           <div className="flex-1 space-y-1">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-medium">
-                {comment.author[0].username}
+                {comment.author?.username}
               </h3>
               <span className="text-xs text-gray-500">
                 {format(comment.createdAt, "MMM dd, yyyy")} at{" "}
@@ -43,19 +41,12 @@ export default function CommentCard({ comment }: { comment: IComment }) {
               {parse(JSON.parse(comment.content))}
             </p>
             <div className="flex items-center space-x-4 pt-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="flex items-center space-x-1 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
-                onClick={handleLike}
-              >
-                <Heart
-                  className={`h-4 w-4 ${
-                    likes > 0 ? "fill-red-500 text-red-500" : ""
-                  }`}
-                />
-                <span className="text-xs font-medium">{likes}</span>
-              </Button>
+              <LikeDislikeButton
+                likes={comment?.likes}
+                isLiked={comment?.isLiked}
+                commentId={comment._id}
+              />
+
               <Button
                 variant="ghost"
                 size="sm"

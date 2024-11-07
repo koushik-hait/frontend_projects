@@ -14,95 +14,144 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Link, useParams } from "react-router-dom";
+import { expressApi } from "@/lib/axios-conf";
+import { useMutation } from "@tanstack/react-query";
+import { ArrowLeft, Loader2 } from "lucide-react";
 
 const passwordResetSchema = z
   .object({
     email: z.string().email("Invalid email address"),
-    password: z.string().min(8, "Password must be at least 8 characters"),
-    confirmPassword: z.string(),
+    newPassword: z.string().min(8, "Password must be at least 8 characters"),
+    confirmNewPassword: z.string(),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine((data) => data.newPassword === data.confirmNewPassword, {
     message: "Passwords don't match",
-    path: ["confirmPassword"],
+    path: ["confirmNewPassword"],
   });
 
 type PasswordResetFormValues = z.infer<typeof passwordResetSchema>;
 
+const resetPassword = async (
+  formData: PasswordResetFormValues,
+  resetToken: string
+) => {
+  const { data } = await expressApi.post(`/user/reset-password/${resetToken}`, {
+    ...formData,
+  });
+  return data;
+};
+
 export default function ResetPassword() {
+  const { resetPasswordToken } = useParams();
   const [isSuccess, setIsSuccess] = useState(false);
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<PasswordResetFormValues>({
     resolver: zodResolver(passwordResetSchema),
   });
 
+  const mutation = useMutation({
+    mutationFn: (formData: PasswordResetFormValues) =>
+      resetPassword(formData, resetPasswordToken as string),
+    onSuccess: () => {
+      setIsSuccess(true);
+    },
+    onError: () => {
+      setIsSuccess(false);
+    },
+  });
+
   const onSubmit = (data: PasswordResetFormValues) => {
-    // Here you would typically send the data to your API
-    console.log(data);
-    setIsSuccess(true);
+    mutation.mutate(data);
   };
 
   if (isSuccess) {
     return (
-      <Alert>
-        <AlertTitle>Success</AlertTitle>
-        <AlertDescription>
-          Your password has been reset successfully.
-        </AlertDescription>
-      </Alert>
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <Card className="w-[350px]">
+          <CardContent>
+            <Alert>
+              <AlertTitle>Success</AlertTitle>
+              <AlertDescription>
+                Your password has been reset successfully.
+              </AlertDescription>
+            </Alert>
+          </CardContent>
+          <Button variant="ghost" className="w-full" asChild>
+            <Link to="/login">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Go Back to Login
+            </Link>
+          </Button>
+        </Card>
+      </div>
     );
   }
 
   return (
-    <Card className="w-[350px]">
-      <CardHeader>
-        <CardTitle>Reset Password</CardTitle>
-        <CardDescription>
-          Enter your email and new password below.
-        </CardDescription>
-      </CardHeader>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <CardContent>
-          <div className="grid w-full items-center gap-4">
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" {...register("email")} />
-              {errors.email && (
-                <p className="text-sm text-red-500">{errors.email.message}</p>
-              )}
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <Card className="w-[350px]">
+        <CardHeader>
+          <CardTitle>Reset Password</CardTitle>
+          <CardDescription>
+            Enter your email and new password below.
+          </CardDescription>
+        </CardHeader>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <CardContent>
+            <div className="grid w-full items-center gap-4">
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="email">Email</Label>
+                <Input id="email" {...register("email")} />
+                {errors.email && (
+                  <p className="text-sm text-red-500">{errors.email.message}</p>
+                )}
+              </div>
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="password">New Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  {...register("newPassword")}
+                />
+                {errors.newPassword && (
+                  <p className="text-sm text-red-500">
+                    {errors.newPassword.message}
+                  </p>
+                )}
+              </div>
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="confirmNewPassword">Confirm Password</Label>
+                <Input
+                  id="confirmNewPassword"
+                  type="password"
+                  {...register("confirmNewPassword")}
+                />
+                {errors.confirmNewPassword && (
+                  <p className="text-sm text-red-500">
+                    {errors.confirmNewPassword.message}
+                  </p>
+                )}
+              </div>
             </div>
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="password">New Password</Label>
-              <Input id="password" type="password" {...register("password")} />
-              {errors.password && (
-                <p className="text-sm text-red-500">
-                  {errors.password.message}
-                </p>
+          </CardContent>
+          <CardFooter className="flex flex-col gap-2">
+            <Button className="w-full" type="submit" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Please wait
+                </>
+              ) : (
+                "Reset Password"
               )}
-            </div>
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
-              <Input
-                id="confirmPassword"
-                type="password"
-                {...register("confirmPassword")}
-              />
-              {errors.confirmPassword && (
-                <p className="text-sm text-red-500">
-                  {errors.confirmPassword.message}
-                </p>
-              )}
-            </div>
-          </div>
-        </CardContent>
-        <CardFooter>
-          <Button type="submit" className="w-full">
-            Reset Password
-          </Button>
-        </CardFooter>
-      </form>
-    </Card>
+            </Button>
+          </CardFooter>
+        </form>
+      </Card>
+    </div>
   );
 }

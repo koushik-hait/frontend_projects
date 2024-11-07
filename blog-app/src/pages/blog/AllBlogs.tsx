@@ -5,7 +5,7 @@ import { Blog, IPayload, IResponse } from "@/types/index";
 import { useEffect } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useFilters } from "@/lib/store/filterStore";
-import { BlogPostCard } from "@/components/post/post-card";
+import { BlogPostCard } from "@/features/post/components/post-card";
 
 const AllBlogs = () => {
   const { page, setPage, limit, setLimit } = useFilters();
@@ -63,7 +63,7 @@ const AllBlogs = () => {
       ) : (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-4 mt-12 mb-12">
           {data?.pages?.map((page, i) => (
-            <div className="grid md:grid-cols-2 gap-x-6 gap-y-8 mt-5">
+            <div key={i} className="grid md:grid-cols-2 gap-x-6 gap-y-8 mt-5">
               {page.data.map((blog) => (
                 <BlogPostCard post={blog} key={blog._id + i} />
               ))}

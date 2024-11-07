@@ -23,11 +23,11 @@ import { blogSchema, blogType } from "@/types/schema/blog";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import TagsInput from "../ui/tags-input";
-import { Textarea } from "../ui/textarea";
+import { RadioGroup, RadioGroupItem } from "../../../components/ui/radio-group";
+import TagsInput from "../../../components/ui/tags-input";
+import { Textarea } from "../../../components/ui/textarea";
 import { useQuery } from "@tanstack/react-query";
-import { CustomImageUpload } from "../custom-image-upload";
+import { CustomImageUpload } from "../../../components/custom-image-upload";
 
 const getAllCategories = async () => {
   const { data } = await expressApi.get<IResponse<IPayload<Category[]>>>(

@@ -1,4 +1,4 @@
-import BlogForm from "@/components/forms/BlogForm";
+import BlogForm from "@/features/post/forms/BlogForm";
 import { expressApi } from "@/lib/axios-conf";
 import { Blog } from "@/types";
 import { useEffect, useState } from "react";

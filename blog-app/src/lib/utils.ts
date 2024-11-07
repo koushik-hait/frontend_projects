@@ -5,18 +5,22 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export class LocalStorageManager {
-  static setValue(key: string, value: any) {
+export class LocalStore {
+  static set(key: string, value: any) {
     localStorage.setItem(key, JSON.stringify(value));
   }
 
-  static getValue<T>(key: string): T | null {
+  static get<T>(key: string): T | null {
     const value = localStorage.getItem(key);
     return value ? JSON.parse(value) : null;
   }
 
-  static removeValue(key: string) {
+  static remove(key: string) {
     localStorage.removeItem(key);
+  }
+
+  static clear() {
+    localStorage.clear();
   }
 }
 

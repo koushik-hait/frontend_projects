@@ -16,6 +16,8 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { expressApi } from "@/lib/axios-conf";
 
 const forgotPasswordSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -23,24 +25,33 @@ const forgotPasswordSchema = z.object({
 
 type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>;
 
+const forgotPassword = async (email: string) => {
+  const { data } = await expressApi.post("/user/forgot-password", { email });
+  return data;
+};
+
 export default function ForgotPassword() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<ForgotPasswordFormValues>({
     resolver: zodResolver(forgotPasswordSchema),
   });
 
+  const mutation = useMutation({
+    mutationFn: forgotPassword,
+    onSuccess: () => {
+      setIsSuccess(true);
+    },
+    onError: () => {
+      setIsSuccess(false);
+    },
+  });
+
   const onSubmit = async (data: ForgotPasswordFormValues) => {
-    setIsSubmitting(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    console.log("Password reset requested for:", data.email);
-    setIsSubmitting(false);
-    setIsSuccess(true);
+    mutation.mutate(data.email);
   };
 
   return (

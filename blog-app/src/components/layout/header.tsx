@@ -5,6 +5,7 @@ import { Menu, NotebookPen, Package2, Snowflake } from "lucide-react";
 import { Link } from "react-router-dom";
 import SearchForm from "../forms/SearchForm";
 import ProfileButton from "./profile-button";
+import { Notification } from "./notification";
 
 const HeaderX = () => {
   const { user, isAuthenticated, logout } = useAuthStore();
@@ -84,7 +85,10 @@ const HeaderX = () => {
       <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
         <SearchForm />
         {isAuthenticated ? (
-          <ProfileButton />
+          <>
+            <Notification />
+            <ProfileButton />
+          </>
         ) : (
           <div className="flex gap-2">
             <Link to="/login">

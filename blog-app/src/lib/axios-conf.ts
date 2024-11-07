@@ -1,5 +1,5 @@
 import axios from "axios";
-import { LocalStorageManager } from "./utils";
+import { LocalStore } from "./utils";
 
 const headers = {
   "Content-Type": "application/json",
@@ -19,7 +19,7 @@ export const expressApi = axios.create({
 expressApi.interceptors.request.use(
   function (config) {
     // Retrieve user token from local storage
-    const token = LocalStorageManager.getValue("token");
+    const token = LocalStore.get("token");
     // Set authorization header with bearer token
     config.headers.Authorization = `Bearer ${token}`;
     return config;

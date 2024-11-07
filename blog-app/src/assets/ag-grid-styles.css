@@ -1,0 +1,17 @@
+/* custom styling for ag-grid */
+.ag-theme-quartz {
+  /* Changes the color of the grid text */
+  --ag-foreground-color: rgb(14, 68, 145);
+  /* Changes the color of the grid background */
+  --ag-background-color: rgba(241, 247, 255);
+  /* Changes the header color of the top row */
+  --ag-header-background-color: rgba(228, 237, 250);
+  /* Changes the hover color of the row*/
+  --ag-row-hover-color: rgba(0, 38, 255, 0.1);
+}
+
+.ag-root-wrapper-body.ag-layout-normal {
+  flex: 1 1 auto;
+  height: 100% !important;
+  min-height: 0;
+}

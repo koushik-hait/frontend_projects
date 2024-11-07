@@ -1,5 +1,4 @@
 import AllBlogs from "./blog/AllBlogs";
-import WithAuth from "@/components/WithAuth";
 
 const HomePage = () => {
   return (
@@ -9,4 +8,4 @@ const HomePage = () => {
   );
 };
 
-export default WithAuth(HomePage);
+export default HomePage;

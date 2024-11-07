@@ -3,7 +3,7 @@ import { expressApi } from "@/lib/axios-conf";
 import { Blog, IPayload, IResponse } from "@/types";
 import React, { useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { BlogPostCard } from "../components/post/post-card";
+import { BlogPostCard } from "@/features/post/components/post-card";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useFilters } from "@/lib/store/filterStore";
 

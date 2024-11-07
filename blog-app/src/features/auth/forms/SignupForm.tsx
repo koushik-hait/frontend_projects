@@ -9,15 +9,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/components/ui/use-toast";
 import { registerSchema, registerType } from "@/types/schema/user";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 const SignupForm = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
   const form = useForm<registerType>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -33,19 +32,10 @@ const SignupForm = () => {
     console.log(res);
     if (res?.status == 201) {
       console.log(res);
-      toast({
-        variant: "default",
-        title: "Signup successful",
-        description: res.data.message,
-      });
       form.reset();
       navigate("/login");
     } else {
-      toast({
-        variant: "destructive",
-        title: "Signup failed",
-        description: res?.data.message,
-      });
+      console.log("Something went wrong");
     }
   };
 

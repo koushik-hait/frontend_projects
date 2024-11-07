@@ -7,9 +7,9 @@ import { useToast } from "@/components/ui/use-toast";
 import { expressApi } from "@/lib/axios-conf";
 import { useAuthStore } from "@/lib/store/authStore";
 import { commentSchema, CommentType } from "@/types/schema/blog";
-import RichTextEditor from "../editor/RichTextEditor";
-import { Button } from "../ui/button";
-import { Form } from "../ui/form";
+import RichTextEditor from "../../../components/editor/RichTextEditor";
+import { Button } from "../../../components/ui/button";
+import { Form } from "../../../components/ui/form";
 
 type CommentFormProps = {
   pid: string;
@@ -34,7 +34,7 @@ const CommentForm: React.FC<CommentFormProps> = ({ pid }) => {
         postId: pid,
         author: user?._id,
       };
-      const response = await expressApi.post("/blog/comment/create", data);
+      const response = await expressApi.post(`/blog/comment/p/${pid}`, data);
       if (response.status == 201) {
         toast({
           variant: "default",

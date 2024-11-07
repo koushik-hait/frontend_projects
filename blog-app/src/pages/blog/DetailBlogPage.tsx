@@ -1,16 +1,18 @@
-import { Comment } from "@/components/comment/Comment";
+// import { Comment } from "@/components/comment/Comment";
+import PostComment from "@/features/comment/PostComment";
 import { Editor } from "@/components/editor/BlockNoteEditor";
-import DeletePostBtn from "@/components/post/DeletePostBtn";
+import CommentForm from "@/features/comment/forms/CommentForm";
+import DeletePostBtn from "@/features/post/components/DeletePostBtn";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { expressApi } from "@/lib/axios-conf";
 import { useAuthStore } from "@/lib/store/authStore";
+import { Blog, IComment, IPayload, IResponse } from "@/types";
 import "@blocknote/core/fonts/inter.css";
 import "@blocknote/mantine/style.css";
-import { Link, useParams } from "react-router-dom";
-import { IResponse, IPayload, Blog, IComment } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
+import { Link, useParams } from "react-router-dom";
 
 const DetailBlogPage = () => {
   const { pid } = useParams();
@@ -37,7 +39,12 @@ const DetailBlogPage = () => {
     gcTime: 1000 * 60 * 60 * 24 * 7,
   });
 
-  const commentResult = useQuery({
+  const {
+    data: comments,
+    error: err,
+    isError: iserror,
+    isPending: ispending,
+  } = useQuery({
     queryKey: ["comments", pid],
     queryFn: async () => await fetchCommentByPostId(pid!),
     staleTime: 1000 * 60 * 60 * 24 * 7,
@@ -88,7 +95,7 @@ const DetailBlogPage = () => {
               <Avatar>
                 <AvatarImage
                   className="object-cover w-12 h-12 border-2 border-gray-300 rounded-full"
-                  src={post?.author.account.avatar?.url}
+                  src={post?.author?.account?.avatar?.url}
                   alt="@avatar"
                 />
                 <AvatarFallback>
@@ -101,7 +108,7 @@ const DetailBlogPage = () => {
               </Avatar>
               <div className="flex flex-col gap-2">
                 <p className="text-slate-100">
-                  {post?.author.account.username}
+                  {post?.author?.account?.username}
                 </p>
                 <p className="text-slate-100">
                   Posted on {format(new Date(post?.createdAt), "MMM d, yyyy")}
@@ -121,7 +128,19 @@ const DetailBlogPage = () => {
           </div>
         ))}
       </div>
-      <Comment comments={commentResult} pid={pid!} />
+      {/* <Comment comments={commentResult} pid={pid!} /> */}
+      <section className="relative flex items-center justify-center antialiased min-w-7xl">
+        <div className="container px-0 mx-auto sm:px-5">
+          <CommentForm pid={pid!} />
+          <PostComment
+            pid={pid!}
+            comments={comments?.data! as IComment[]}
+            isError={iserror}
+            error={err}
+            isPending={ispending}
+          />
+        </div>
+      </section>
     </>
   );
 };

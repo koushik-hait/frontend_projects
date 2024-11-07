@@ -1,7 +1,4 @@
-import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
-import { Badge } from "lucide-react";
-import { Button } from "../ui/button";
-import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
+import { expressApi } from "@/lib/axios-conf";
 import {
   Blog,
   Category,
@@ -10,9 +7,13 @@ import {
   IUser,
   IUserProfile,
 } from "@/types";
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { useQuery } from "@tanstack/react-query";
-import { expressApi } from "@/lib/axios-conf";
 import { format } from "date-fns";
+import { Badge } from "lucide-react";
+import { Button } from "../ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { FollowButton } from "../../features/post/components/follow-button";
 
 const getTop5Users = async () => {
   const { data } = await expressApi.get<
@@ -35,11 +36,16 @@ const getTop5Recent = async () => {
   return data.data;
 };
 
-type SidebarProps = {
-  topTopics: Category[];
+const getTopTopic = async () => {
+  const { data } = await expressApi.get<IResponse<IPayload<Category[]>>>(
+    "blog/category/top/5"
+  );
+  return data.data;
 };
 
-export const Sidebar: React.FC<SidebarProps> = ({ topTopics }) => {
+type SidebarProps = {};
+
+export const Sidebar: React.FC<SidebarProps> = () => {
   const { data: data1 } = useQuery({
     queryKey: ["top5users"],
     queryFn: getTop5Users,
@@ -59,8 +65,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ topTopics }) => {
     gcTime: 1000 * 60 * 60 * 24 * 7,
   });
 
+  const { data: data4 } = useQuery({
+    queryKey: ["top5topic"],
+    queryFn: getTopTopic,
+    staleTime: 1000 * 60 * 60 * 24 * 7,
+    gcTime: 1000 * 60 * 60 * 24 * 7,
+  });
+
   return (
-    <aside className="w-[25rem] border-l p-6 space-y-6">
+    <aside className="hidden lg:block w-[25rem] border-l p-6 space-y-6">
       <Card>
         <CardHeader>
           <CardTitle>Trending Posts</CardTitle>
@@ -70,7 +83,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ topTopics }) => {
             <div key={post._id} className="space-y-1">
               <h3 className="font-medium leading-none">{post.title}</h3>
               <p className="text-sm text-muted-foreground">
-                {post.author.account.username}
+                {post.author?.account?.username}
               </p>
               <p className="text-xs text-muted-foreground">
                 {post.likes} likes
@@ -89,7 +102,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ topTopics }) => {
             <div key={post._id} className="space-y-1">
               <h3 className="font-medium leading-none">{post.title}</h3>
               <p className="text-sm text-muted-foreground">
-                {post.author.account.username}
+                {post.author?.account?.username}
               </p>
               <p className="text-xs text-muted-foreground">
                 {format(new Date(post?.createdAt), "MMM d, yyyy")}
@@ -110,27 +123,28 @@ export const Sidebar: React.FC<SidebarProps> = ({ topTopics }) => {
                 <Avatar>
                   <AvatarImage
                     className="object-cover w-12 h-12 border-2 border-gray-300 rounded-full"
-                    src={person.account.avatar.url}
-                    alt={person.account.username}
+                    src={person?.account?.avatar?.url}
+                    alt={person?.account?.username}
                   />
                   <AvatarFallback>
                     <div className="w-12 h-12 flex items-center justify-center border-2 rounded-full">
-                      {person.account.username.substring(0, 2).toUpperCase()}
+                      {person?.account?.username.substring(0, 2).toUpperCase()}
                     </div>
                   </AvatarFallback>
                 </Avatar>
                 <div>
                   <p className="text-sm font-medium leading-none">
-                    {person.account.username}
+                    {person?.account?.username}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    {person.account.username}
+                    {person?.account?.username}
                   </p>
                 </div>
               </div>
-              <Button variant="outline" size="sm">
-                Follow
-              </Button>
+              <FollowButton
+                followto={person?.account?._id}
+                isFollowing={person.isFollowing}
+              />
             </div>
           ))}
         </CardContent>
@@ -142,7 +156,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ topTopics }) => {
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-2">
-            {topTopics.map((topic, index) => (
+            {data4?.data.map((topic, index) => (
               <Badge key={index}>{topic.name}</Badge>
             ))}
           </div>

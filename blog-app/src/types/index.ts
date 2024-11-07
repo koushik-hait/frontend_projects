@@ -8,7 +8,7 @@ interface IUser {
   };
   isEmailVerified: boolean;
   loginType: string;
-  user_role: string;
+  role: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -37,6 +37,7 @@ interface IUserProfile<U> {
   account: U;
   following: number;
   followers: number;
+  isFollowing: boolean;
 }
 
 interface Follower {
@@ -77,7 +78,9 @@ interface IComment {
   _id: string;
   content: string;
   postId: string;
-  author: IUser[];
+  author: IUser;
+  likes: number;
+  isLiked: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -103,11 +106,11 @@ interface IResponse<T> {
 }
 
 export type {
-  IUser,
   Blog,
   Category,
   IComment,
   IPayload,
   IResponse,
+  IUser,
   IUserProfile,
 };

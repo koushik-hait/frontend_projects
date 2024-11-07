@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { useAuthStore } from "@/lib/store/authStore";
-import { LocalStorageManager } from "@/lib/utils";
+import { LocalStore } from "@/lib/utils";
 import { loginSchema, loginType } from "@/types/schema/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -34,14 +34,18 @@ const LoginForm = () => {
     // console.log(res);
     if (res?.status == 200) {
       const token = res.data.data.accessToken;
-      LocalStorageManager.setValue("token", token);
+      LocalStore.set("token", token);
       login(res.data.data.user);
       toast({
         variant: "default",
         title: "Login successful",
         description: res.data.message,
       });
-      navigate("/");
+      if (res.data.data.user.role == "ADMIN") {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
     } else {
       toast({
         variant: "destructive",
