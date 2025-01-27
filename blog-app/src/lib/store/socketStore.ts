@@ -2,7 +2,7 @@
 
 import socketio, { Socket } from "socket.io-client";
 import { create } from "zustand";
-import { toast } from "../../components/ui/use-toast";
+import { toast } from "@/hooks/use-toast";
 import { LocalStore } from "../utils";
 // import { persist } from "zustand/middleware";
 const MAX_NOTIFICATIONS = 50; // Adjust this number as needed

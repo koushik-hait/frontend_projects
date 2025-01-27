@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { expressApi } from "@/lib/axios-conf";
 import { Blog, Category, IPayload, IResponse } from "@/types";
 import { blogSchema, blogType } from "@/types/schema/blog";

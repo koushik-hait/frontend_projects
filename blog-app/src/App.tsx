@@ -4,19 +4,8 @@ import HeaderX from "./components/layout/header";
 import { Sidebar } from "./components/layout/sidebar";
 // import { Notification } from "./components/layout/notification";
 // import { Toaster } from "./components/ui/toaster";
-// import { useEffect } from "react";
-// import useSocketStore from "./lib/store/socketStore";
 
 const App = () => {
-  // const { socket, connectSocket, disconnectSocket } = useSocketStore();
-
-  // useEffect(() => {
-  //   connectSocket();
-
-  //   return () => {
-  //     disconnectSocket();
-  //   };
-  // }, [connectSocket, disconnectSocket]);
   return (
     <>
       <div className="w-full min-h-screen flex flex-col dark">

@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 // import RTE from "../editor/RTE";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { expressApi } from "@/lib/axios-conf";
 import { useAuthStore } from "@/lib/store/authStore";
 import { commentSchema, CommentType } from "@/types/schema/blog";

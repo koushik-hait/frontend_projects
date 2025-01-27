@@ -1,4 +1,3 @@
-import { loginUser } from "@/apis/user";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -9,13 +8,17 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
+import { expressApi } from "@/lib/axios-conf";
 import { useAuthStore } from "@/lib/store/authStore";
 import { LocalStore } from "@/lib/utils";
 import { loginSchema, loginType } from "@/types/schema/user";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
+import { loginUser } from "../../../apis/user";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -29,30 +32,44 @@ const LoginForm = () => {
     },
   });
 
-  const onSubmit = async (values: loginType) => {
-    const res = await loginUser(values);
-    // console.log(res);
-    if (res?.status == 200) {
-      const token = res.data.data.accessToken;
+  const mutation = useMutation({
+    mutationFn: loginUser,
+    onSuccess: (data) => {
+      // console.log("mutation onSuccess", data);
+      const token = data.data.accessToken;
       LocalStore.set("token", token);
-      login(res.data.data.user);
+      login(data.data.user);
       toast({
         variant: "default",
         title: "Login successful",
-        description: res.data.message,
+        description: data.message,
       });
-      if (res.data.data.user.role == "ADMIN") {
+      form.reset();
+      if (data.data.user.role == "ADMIN") {
         navigate("/admin");
       } else {
         navigate("/");
       }
-    } else {
+    },
+    onError: (
+      error: AxiosError<{
+        data: null;
+        message: string;
+        statusCode: number;
+        success: boolean;
+      }>
+    ) => {
       toast({
         variant: "destructive",
         title: "Login failed",
-        description: res?.data.message,
+        description: error.response?.data.message || "Something went wrong",
       });
-    }
+      // console.log("mutation onError", error.response?.data.message);
+    },
+  });
+
+  const onSubmit = async (values: loginType) => {
+    mutation.mutate(values);
   };
 
   return (
@@ -97,13 +114,12 @@ const LoginForm = () => {
           )}
         />
 
-        {form.formState.isSubmitting ? (
-          <Button type="button" className="text-center w-full " disabled>
-            <div className="w-10 h-10 border-4 border-dashed rounded-full animate-spin dark:border-violet-600"></div>
-          </Button>
-        ) : (
-          <Button type="submit">Login</Button>
-        )}
+        <Button type="submit" disabled={mutation.isPending} className="w-full">
+          Sign in{" "}
+          {mutation.isPending && (
+            <span className="loading loading-spinner">.....</span>
+          )}
+        </Button>
       </form>
     </Form>
   );

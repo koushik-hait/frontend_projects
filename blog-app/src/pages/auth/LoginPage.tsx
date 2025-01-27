@@ -16,7 +16,7 @@ export default function LoginPage() {
     window.location.href = url;
   };
   return (
-    <Card className="mx-auto max-w-md bg-transparent text-white">
+    <Card className="mx-auto max-w-md bg-black text-white my-24">
       <CardHeader>
         <CardTitle className="text-2xl">Login</CardTitle>
         <CardDescription>

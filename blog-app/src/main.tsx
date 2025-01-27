@@ -23,6 +23,7 @@ import { Dashboard } from "./features/admin/pages/dashboard.tsx";
 import AdminApp from "./features/admin/admin-app.tsx";
 import { AllUsers } from "./features/admin/pages/all-users.tsx";
 import AllPosts from "./features/admin/pages/AllPosts.tsx";
+import { Toaster } from "./components/ui/toaster.tsx";
 
 const router = createBrowserRouter([
   {
@@ -124,6 +125,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
+      <Toaster />
     </QueryClientProvider>
   </React.StrictMode>
 );

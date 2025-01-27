@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import axios from "axios";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -49,3 +50,14 @@ export const extractUsernameOrEmail = (
 // const inputValue = "username@example.com";
 // const extracted = extractUsernameOrEmail(inputValue);
 // console.log(extracted); // Output: { email: 'username@example.com' }
+
+export const notifySearchEngines = async () => {
+  try {
+    await axios.get(
+      `https://www.google.com/ping?sitemap=https://blog.koushikhait.site/sitemap.xml`
+    );
+    console.log("Notified search engines about sitemap update.");
+  } catch (error) {
+    console.error("Error notifying search engines:", error);
+  }
+};

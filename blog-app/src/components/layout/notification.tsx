@@ -1,6 +1,6 @@
 import useSocketStore from "@/lib/store/socketStore";
 import { useEffect, useState } from "react";
-import { Toaster } from "../ui/toaster";
+// import { Toaster } from "../ui/toaster";
 import { Button } from "../ui/button";
 import { BellRing } from "lucide-react";
 import { Badge } from "../ui/badge";
@@ -74,7 +74,7 @@ export const Notification = () => {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <Toaster />
+      {/* <Toaster /> */}
     </>
   );
 };

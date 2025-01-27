@@ -9,13 +9,17 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
+import { expressApi } from "@/lib/axios-conf";
 import { registerSchema, registerType } from "@/types/schema/user";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 const SignupForm = () => {
+  const { toast } = useToast();
   const navigate = useNavigate();
   const form = useForm<registerType>({
     resolver: zodResolver(registerSchema),
@@ -27,16 +31,37 @@ const SignupForm = () => {
     },
   });
 
-  const onSubmit = async (values: registerType) => {
-    const res = await registerUser(values);
-    console.log(res);
-    if (res?.status == 201) {
-      console.log(res);
+  const mutation = useMutation({
+    mutationFn: registerUser,
+    onSuccess(data, variables, context) {
+      console.log("mutation onSuccess", data);
+      toast({
+        variant: "default",
+        title: "Registration Successfull",
+        description: data?.data?.message || "Login Now",
+      });
       form.reset();
       navigate("/login");
-    } else {
-      console.log("Something went wrong");
-    }
+    },
+    onError(
+      error: AxiosError<{
+        data: null;
+        message: string;
+        success: boolean;
+        statusCode: number;
+      }>
+    ) {
+      console.log("mutation onError", error);
+      toast({
+        variant: "destructive",
+        title: "Registration Faild",
+        description: error.response?.data.message || "Something went wrong!",
+      });
+    },
+  });
+
+  const onSubmit = async (values: registerType) => {
+    mutation.mutate(values);
   };
 
   return (
@@ -95,13 +120,12 @@ const SignupForm = () => {
           )}
         />
 
-        {form.formState.isSubmitting ? (
-          <Button type="button" className="text-center " disabled>
-            <div className="w-10 h-10 border-4 border-dashed rounded-full animate-spin dark:border-violet-600"></div>
-          </Button>
-        ) : (
-          <Button type="submit">Sign Up</Button>
-        )}
+        <Button type="submit" className="w-full" disabled={mutation.isPending}>
+          Sign Up{" "}
+          {mutation.isPending && (
+            <span className="loading loading-spinner">.....</span>
+          )}
+        </Button>
       </form>
     </Form>
   );

@@ -2,7 +2,7 @@ import { logoutUser } from "@/apis/user";
 import { useAuthStore } from "@/lib/store/authStore";
 import { RiShutDownLine } from "react-icons/ri";
 import { Button } from "../ui/button";
-import { useToast } from "../ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 const LogoutButton = () => {
   const { toast } = useToast();

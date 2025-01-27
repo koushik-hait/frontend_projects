@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { Bookmark, BookmarkCheck } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import {
   AlertDialog,
